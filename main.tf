@@ -13,9 +13,20 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+resource "aws_vpc" "prod-01" {
+  cidr_block = "10.0.0.0/24"
+  tags = {
+    Name = "turbo-prod-01"
+  }
+}
+
+resource "aws_default_network_acl" "default" {
+  default_network_acl_id = aws_vpc.prod-01.default_network_acl_id
+}
 
 resource "aws_subnet" "main" {
-  vpc_id     = "vpc-0eaabe96d9ecc14c3"
+  vpc_id = aws_vpc.prod-01.id
+#  vpc_id     = "vpc-0eaabe96d9ecc14c3"
   cidr_block = "10.0.0.0/28"
   tags = {
     Name = "Main"
@@ -23,7 +34,8 @@ resource "aws_subnet" "main" {
 }
 
 resource "aws_subnet" "backend" {
-  vpc_id     = "vpc-0eaabe96d9ecc14c3"
+  vpc_id = aws_vpc.prod-01.id
+#  vpc_id     = "vpc-0eaabe96d9ecc14c3"
   cidr_block = "10.0.0.16/28"
   tags = {
     Name = "Backend"
@@ -31,13 +43,13 @@ resource "aws_subnet" "backend" {
 }
 
 resource "aws_subnet" "backend2" {
-  vpc_id     = "vpc-0eaabe96d9ecc14c3"
+  vpc_id = aws_vpc.prod-01.id
+#  vpc_id     = "vpc-0eaabe96d9ecc14c3"
   cidr_block = "10.0.0.32/28"
   tags = {
     Name = "Backend2"
   }
 }
-
 
 resource "aws_instance" "app_server" {
   ami           = "ami-09e67e426f25ce0d7"
@@ -99,7 +111,8 @@ resource "aws_db_instance" "default" {
 resource "aws_security_group" "allow_mysql" {
   name        = "allow_mysql"
   description = "Allow MYSQL traffic"
-  vpc_id      = "vpc-0eaabe96d9ecc14c3"
+  vpc_id = aws_vpc.prod-01.id
+#  vpc_id      = "vpc-0eaabe96d9ecc14c3"
   ingress = [
     {
       description      = "MYSQL in bound"
@@ -135,7 +148,8 @@ resource "aws_security_group" "allow_mysql" {
 resource "aws_security_group" "allow_www" {
   name        = "allow_www"
   description = "Allow WWW traffic"
-  vpc_id      = "vpc-0eaabe96d9ecc14c3"
+  vpc_id = aws_vpc.prod-01.id
+#  vpc_id      = "vpc-0eaabe96d9ecc14c3"
   ingress = [
     {
       description      = "80 in bound"

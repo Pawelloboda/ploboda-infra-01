@@ -103,8 +103,8 @@ resource "aws_security_group" "allow_mysql" {
   ingress = [
     {
       description      = "MYSQL in bound"
-      from_port        = 6306  
-      to_port          = 6306 # default mysql port 3306, but i use custom port
+      from_port        = 3306  
+      to_port          = 3306 # default mysql port 3306, but i use custom port
       protocol         = "tcp"
       cidr_blocks      = ["10.0.0.0/24"] # acces for all vpc-net but [] range for SG
       ipv6_cidr_blocks = []
@@ -117,8 +117,8 @@ resource "aws_security_group" "allow_mysql" {
   egress = [
     {
       description      = "MYSQL out bound"
-      from_port        = 6306 
-      to_port          = 6306 
+      from_port        = 3306 
+      to_port          = 3306 
       protocol         = "tcp"
       cidr_blocks      = ["10.0.0.0/24"]
       ipv6_cidr_blocks = []
